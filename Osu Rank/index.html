@@ -8,6 +8,7 @@
     <link href="./main.css" rel="stylesheet" />
     <script src="https://unpkg.com/vue@3.3.4/dist/vue.global.prod.js"></script>
     <script src="/lib/reconnecting-websocket.js"></script>
+    <script src="/lib/consts.js"></script><script src="/lib/utils.js"></script><script src="/lib/tokenTransformer.js"></script>
     <script src="/lib/consts.js"></script>
     <script src="/lib/utils.js"></script>
 </head>
@@ -21,9 +22,29 @@
         </div>
 
     <script>
-        $(document).ready(function() {
+        let socket = CreateProxiedReconnectingWebSocket("ws://" + location.host + "/ws");
+
+        socket.onopen = () => {
+            console.log("Successfully Connected");
+        };
+
+        socket.onclose = event => {
+            console.log("Socket Closed Connection: ", event);
+            socket.send("Client Closed!");
+        };
+
+        socket.onerror = error => {
+        console.log("Socket Error: ", error);
+        };
+
+
+        socket.onmessage = event => {
+            let data = event.data;
+
+
+            $(document).ready(function() {
             function fetchOsuRank() {
-                var username = "lorkydey";
+                var username = data.gameplay.name;
                 var apiUrl = "https://osu.ppy.sh/api/get_user?u=" + username + "&k=YOUR_API_KEY";
                 
                 $.ajax({
@@ -34,17 +55,17 @@
                         $("#rankValue").text(rank);
                     },
                     error: function(xhr, status, error) {
-                        console.error("Error fetching Osu! rank:", error);
                         $("#rankValue").text("Error");
                     }
                 });
             }
 
             fetchOsuRank();
-
-            // update every 30sec
-            setInterval(fetchOsuRank, 30000);
         });
+
+        }
+
+       
     </script>
 </body>
 </html>
