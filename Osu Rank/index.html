@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Osu! Rank Display</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="./main.css" rel="stylesheet" />
+    <script src="https://unpkg.com/vue@3.3.4/dist/vue.global.prod.js"></script>
+    <script src="/lib/reconnecting-websocket.js"></script>
+    <script src="/lib/consts.js"></script>
+    <script src="/lib/utils.js"></script>
+</head>
+<body>
+
+
+        <div class="base" id="base">
+            <div class="rank">Rank: <span id="rankValue">0</span></div>
+            </div>
+            
+        </div>
+
+    <script>
+        $(document).ready(function() {
+            function fetchOsuRank() {
+                var username = "lorkydey";
+                var apiUrl = "https://osu.ppy.sh/api/get_user?u=" + username + "&k=YOUR_API_KEY";
+                
+                $.ajax({
+                    url: apiUrl,
+                    type: "GET",
+                    success: function(response) {
+                        var rank = response[0].pp_rank;
+                        $("#rankValue").text(rank);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error fetching Osu! rank:", error);
+                        $("#rankValue").text("Error");
+                    }
+                });
+            }
+
+            fetchOsuRank();
+
+            // update every 30sec
+            setInterval(fetchOsuRank, 30000);
+        });
+    </script>
+</body>
+</html>
