@@ -1,5 +1,5 @@
 # Osu Rank Overlay
-A simple overlay showing your osu! rank for the StreamCompanion
+A simple overlay showing your osu! rank for the [StreamCompanion](https://github.com/Piotrekol/StreamCompanion).
 
 ## Installation
 1. Drop the folder in 
